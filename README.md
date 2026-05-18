@@ -178,9 +178,7 @@ Developed with learning references from a Zynq FPGA image-processing tutorial pl
 
 ---
 
-## Resume Description
 
-Designed and implemented an RTL-based FPGA convolution accelerator, packaged as custom AXI-stream IP and integrated in a Zynq block design for image filtering.
 
 ---
 
