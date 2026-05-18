@@ -119,7 +119,7 @@ fpga-convolution-accelerator/
 │
 ├── simulation/
 │   ├── testbench/
-│   └── lena_vectors/
+│   └── lena_image/
 │
 ├── block_design/
 │   ├── vivado_bd.tcl
