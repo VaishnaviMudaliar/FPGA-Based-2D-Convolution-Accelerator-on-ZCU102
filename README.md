@@ -173,6 +173,30 @@ The `imageControl` module internally uses an inverted reset signal:
 ```
 
 ---
+# Results
+
+## Input vs Output Comparison
+
+The following images demonstrate the effect of the 2D convolution accelerator implemented on the FPGA.
+
+<p align="center">
+  <table>
+    <tr>
+      <th>Input Image</th>
+      <th>Processed Output</th>
+    </tr>
+    <tr>
+      <td>
+        <img src="docs/input_image.png" alt="Input Image" width="400"/>
+      </td>
+      <td>
+        <img src="docs/output_image.png" alt="Output Image" width="400"/>
+      </td>
+    </tr>
+  </table>
+</p>
+
+> Replace the placeholder images with your actual input and processed output results.
 
 # Features
 
