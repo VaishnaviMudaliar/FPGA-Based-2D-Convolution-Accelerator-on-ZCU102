@@ -181,12 +181,11 @@ The `imageControl` module internally uses an inverted reset signal:
 The following block design illustrates the AXI-Stream based hardware architecture implemented on the ZCU102 FPGA platform.
 
 <p align="center">
-  <img src="docs/axi_stream_block_design.png" 
+  <img src="block_diagram.png" 
        alt="AXI Stream Block Design" 
        width="950"/>
 </p>
 
-> Replace the placeholder image with the Vivado Block Design screenshot.
 
 ---
 
@@ -296,9 +295,14 @@ Possible future extensions include:
 │   ├── conv.v
 │   └── outputBuffer.v
 │
-├── docs/
-│   └── architecture_diagram.png
-│
+├── simulation/
+│   └── testbench
+|         └── tb.v
+|   └── lena_image
+|         └── lena_gray.bmp
+|         └── blurred_lena.bmp
+├── architecture_diagram.png
+├── block_diagram.png
 └── README.md
 ```
 
