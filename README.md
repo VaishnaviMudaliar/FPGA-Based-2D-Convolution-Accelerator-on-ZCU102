@@ -1,187 +1,236 @@
-# FPGA-Based 2D Convolution Accelerator on Zynq
+# FPGA-Based 2D Convolution Accelerator on ZCU102 
+
+<p align="center">
+  <img src="docs/architecture_diagram.png" alt="Image Processing Architecture Diagram" width="900"/>
+</p>
+
+> Replace the placeholder image with your architecture diagram.
+
+---
 
 ## Overview
 
-This repository contains an RTL implementation of a **2D convolution accelerator** for image filtering on FPGA, tested using the **Lena** test image and integrated as a custom IP in a Zynq block design.
+This project implements a hardware-based image processing pipeline in Verilog using an AXI-Stream style interface. The top-level module, `imageProcessTop`, connects multiple processing stages to receive image pixels, perform convolution-based filtering, and stream the processed output data.
 
-The project implements a streaming image-processing pipeline using:
-
-* Custom Verilog RTL
-* Line buffers for sliding window generation
-* 3×3 convolution engine
-* AXI4-Stream compatible custom IP
-* Vivado block design integration
-* TLAST-enabled streaming support for DMA/video pipelines
+The design is intended for FPGA-based real-time image processing applications and follows a modular streaming architecture for high-throughput operation.
 
 ---
 
-## Architecture
+# Top-Level Architecture
 
-Pipeline:
+The pipeline consists of three major modules:
+
+1. `imageControl`
+2. `conv`
+3. `outputBuffer`
+
+Data flows sequentially through these blocks:
 
 ```text
-Input Pixel Stream
-   ↓
-Line Buffers (3x3 Window Generation)
-   ↓
-Convolution MAC Engine
-   ↓
-AXI Stream Output Buffer (TVALID/TREADY/TLAST)
-   ↓
-Filtered Output Image
+Input AXI Stream
+        │
+        ▼
++----------------+
+|  imageControl  |
++----------------+
+        │ 72-bit windowed pixel data
+        ▼
++----------------+
+|      conv      |
++----------------+
+        │ Filtered pixel stream
+        ▼
++----------------+
+|  outputBuffer  |
++----------------+
+        │
+        ▼
+Output AXI Stream
 ```
 
-### Modules
+---
 
-### `imageProcessTop.v`
+# Module Description
 
-Top-level accelerator integrating:
+## 1. imageControl
 
-* Streaming interfaces
-* Image control
-* Convolution block
-* Output AXI buffer
-* Interrupt generation
-* TLAST signaling
+The `imageControl` module receives incoming 8-bit pixel data and prepares it for convolution processing.
 
-### `imageControl.v`
+### Responsibilities
+- Accepts pixel stream input
+- Generates sliding image windows
+- Produces 72-bit pixel data for convolution
+- Generates frame synchronization signals
+- Raises interrupt signal after frame processing
 
-Responsible for:
+### Inputs
+- `i_pixel_data[7:0]`
+- `i_pixel_data_valid`
+- `i_clk`
+- `i_rst`
 
-* Sliding window generation
-* Multi-line buffering
-* Pixel scheduling
-* Frame/line control
-* TLAST generation
+### Outputs
+- `o_pixel_data[71:0]`
+- `o_pixel_data_valid`
+- `o_tlast`
+- `o_intr`
 
-### `lineBuffer.v`
-
-Implements row buffering for neighborhood extraction.
-
-### `conv.v`
-
-Implements 3×3 convolution kernel.
-(Current kernel initialized as averaging filter.)
+This stage is typically responsible for line buffering and neighborhood extraction required for spatial filtering operations such as 3×3 convolution.
 
 ---
 
-## Features
+## 2. conv
 
-* RTL-based image convolution accelerator
-* 3×3 filter support
-* AXI4-Stream compatible IP
-* TLAST support for ZCU102 integration
-* Vivado block design ready
-* Lena image verification
+The `conv` module performs convolution on the incoming pixel window data.
+
+### Responsibilities
+- Applies convolution kernel/filter
+- Processes 72-bit neighborhood pixel data
+- Produces filtered 8-bit output pixels
+- Maintains stream synchronization signals
+
+### Inputs
+- `i_pixel_data[71:0]`
+- `i_pixel_data_valid`
+- `i_tlast`
+- `i_clk`
+
+### Outputs
+- `o_convolved_data[7:0]`
+- `o_convolved_data_valid`
+- `o_tlast`
+
+This block can be extended to support:
+- Edge detection
+- Blur filters
+- Sharpening
+- Gaussian filtering
+- Sobel operators
 
 ---
 
-## Target Platform
+## 3. outputBuffer
 
-* Xilinx ZCU102 Evaluation Kit
-* Vivado Design Suite
-* Verilog HDL
+The `outputBuffer` module acts as an AXI-stream output interface buffer.
+
+### Responsibilities
+- Buffers processed pixel data
+- Handles AXI-stream handshake
+- Synchronizes output transmission
+- Passes frame-end (`tlast`) information
+
+### AXI Stream Signals
+
+#### Slave Side
+- `s_axis_tvalid`
+- `s_axis_tdata`
+- `s_axis_tlast`
+
+#### Master Side
+- `m_axis_tvalid`
+- `m_axis_tdata`
+- `m_axis_tready`
+- `m_axis_tlast`
+
+This module enables smooth streaming of processed image data to downstream modules such as DMA engines, display controllers, or video interfaces.
 
 ---
 
-## Example Kernel
+# Interface Overview
 
-Current kernel:
+## Input Interface
 
-```text
-1 1 1
-1 1 1
-1 1 1
+| Signal | Description |
+|---|---|
+| `i_data[7:0]` | Input pixel data |
+| `i_data_valid` | Input data valid signal |
+| `o_data_ready` | Ready signal for upstream source |
+
+---
+
+## Output Interface
+
+| Signal | Description |
+|---|---|
+| `o_data[7:0]` | Processed output pixel |
+| `o_data_valid` | Output data valid |
+| `i_data_ready` | Downstream ready signal |
+| `o_data_last` | End-of-frame / line indicator |
+
+---
+
+# Clock and Reset
+
+| Signal | Description |
+|---|---|
+| `axi_clk` | System clock |
+| `axi_reset_n` | Active-low reset |
+
+The `imageControl` module internally uses an inverted reset signal:
+
+```verilog
+.i_rst(!axi_reset_n)
 ```
 
-Implements averaging/blur:
+---
 
-Output = Sum(kernel × window)/9
+# Features
 
-Can be extended for:
-
-* Sobel
-* Gaussian
-* Sharpen
-* Edge detection
+- AXI-stream compatible architecture
+- Fully pipelined image processing flow
+- Modular FPGA-friendly design
+- Real-time streaming support
+- Convolution-based filtering framework
+- Interrupt generation support
+- Scalable for advanced image processing applications
 
 ---
 
-## Repository Structure
+# Applications
+
+This architecture can be used for:
+
+- Real-time video processing
+- FPGA vision systems
+- Edge detection
+- Image enhancement
+- Embedded AI preprocessing
+- Industrial inspection systems
+- Autonomous robotics vision pipelines
+
+---
+
+# Future Improvements
+
+Possible future extensions include:
+
+- Configurable convolution kernels
+- Multi-channel RGB support
+- DMA integration
+- Sobel/Canny edge detection
+- Histogram equalization
+- Hardware acceleration optimizations
+- AXI4-Full memory interface support
+
+---
+
+# Repository Structure
 
 ```text
-fpga-convolution-accelerator/
 ├── rtl/
 │   ├── imageProcessTop.v
 │   ├── imageControl.v
-│   ├── lineBuffer.v
-│   └── conv.v
+│   ├── conv.v
+│   └── outputBuffer.v
 │
-├── simulation/
-│   ├── testbench/
-│   └── lena_image/
+├── docs/
+│   └── architecture_diagram.png
 │
-├── block_design/
-│   ├── vivado_bd.tcl
-│   └── block_diagram.png
-│
-├── images/
-│   ├── lena_input.png
-│   └── filtered_output.png
-│
-└── docs/
-    └── project_report.pdf
+└── README.md
 ```
 
 ---
 
-## Results
+# License
 
-
-
-* Input Lena image
-* Filtered output image
-* Vivado block design
-* Simulation waveforms
-* Resource utilization report
-
----
-
-## AXI Stream Notes
-
-The IP supports:
-
-* TDATA
-* TVALID
-* TREADY
-* TLAST (line boundary signaling)
-
-TLAST was added for correct DMA/video-stream interoperability.
-
----
-
-## Possible Extensions
-
-Future improvements:
-
-* Parameterized kernel size (5×5, 7×7)
-* Runtime-programmable kernels via AXI-Lite
-* Multi-channel CNN convolution support
-* Throughput and resource benchmarking
-* Real-time video stream input
-
----
-
-## Reference
-
-Developed with learning references from a Zynq FPGA image-processing tutorial playlist and extended through custom RTL implementation, IP packaging, and system integration.
-
----
-
-
-
----
-
-## License
-
-MIT License
+This project is open-source and available under the MIT License.
