@@ -1,10 +1,10 @@
 # FPGA-Based 2D Convolution Accelerator on ZCU102 
 
 <p align="center">
-  <img src="docs/architecture_diagram.png" alt="Image Processing Architecture Diagram" width="900"/>
+  <img src="architecture_diagram.png" alt="Image Processing Architecture Diagram" width="900"/>
 </p>
 
-> Replace the placeholder image with your architecture diagram.
+
 
 ---
 
