@@ -272,20 +272,6 @@ This architecture can be used for:
 
 ---
 
-# Future Improvements
-
-Possible future extensions include:
-
-- Configurable convolution kernels
-- Multi-channel RGB support
-- DMA integration
-- Sobel/Canny edge detection
-- Histogram equalization
-- Hardware acceleration optimizations
-- AXI4-Full memory interface support
-
----
-
 # Repository Structure
 
 ```text
@@ -305,6 +291,21 @@ Possible future extensions include:
 ├── block_diagram.png
 └── README.md
 ```
+
+---
+
+# Final Notes
+
+This project was developed to explore hardware-accelerated image processing using FPGA streaming architectures and AXI-based communication. It demonstrates the implementation of a real-time 2D convolution pipeline optimized for high-throughput embedded vision applications.
+
+Future improvements may include:
+- Multi-filter support
+- RGB image processing
+- Runtime programmable kernels
+- DMA optimization
+- AI/ML preprocessing acceleration
+
+If you found this project interesting, feel free to ⭐ the repository or contribute to future enhancements.
 
 ---
 
