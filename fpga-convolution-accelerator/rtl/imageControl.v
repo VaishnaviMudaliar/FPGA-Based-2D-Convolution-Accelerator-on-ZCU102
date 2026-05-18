@@ -26,7 +26,6 @@ input [7:0]              i_pixel_data,
 input                    i_pixel_data_valid,
 output reg [71:0]        o_pixel_data,
 output                   o_pixel_data_valid,
-output reg               o_tlast,
 output reg               o_intr
 );
 
@@ -48,17 +47,6 @@ localparam IDLE = 'b0,
            RD_BUFFER = 'b1;
 
 assign o_pixel_data_valid = rd_line_buffer;
-
-
-always @(posedge i_clk)
-begin
-    if(i_rst)
-        o_tlast <= 1'b0;
-    else if(rd_line_buffer && rdCounter == 511)
-        o_tlast <= 1'b1;
-    else
-        o_tlast <= 1'b0;
-end
 
 always @(posedge i_clk)
 begin
