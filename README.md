@@ -172,6 +172,55 @@ The `imageControl` module internally uses an inverted reset signal:
 .i_rst(!axi_reset_n)
 ```
 
+
+
+---
+
+# AXI Stream Block Design
+
+The following block design illustrates the AXI-Stream based hardware architecture implemented on the ZCU102 FPGA platform.
+
+<p align="center">
+  <img src="docs/axi_stream_block_design.png" 
+       alt="AXI Stream Block Design" 
+       width="950"/>
+</p>
+
+> Replace the placeholder image with the Vivado Block Design screenshot.
+
+---
+
+## AXI Stream Architecture Overview
+
+The design uses AXI-Stream interfaces for high-speed pixel data transfer between processing modules.
+
+### Main Components
+- AXI DMA
+- Processing System (PS)
+- AXI Interconnect
+- Custom Convolution IP
+- Output Buffer
+- Memory Interface
+
+### Data Flow
+
+```text
+DDR Memory
+    │
+    ▼
+AXI DMA MM2S
+    │
+    ▼
+Custom Image Processing IP
+    │
+    ▼
+AXI DMA S2MM
+    │
+    ▼
+DDR Memory
+```
+
+
 ---
 # Results
 
@@ -190,13 +239,13 @@ The following images demonstrate the effect of the 2D convolution accelerator im
         <img src="fpga-convolution-accelerator/simulation/lena_image/lena_gray.bmp" alt="Input Image" width="400"/>
       </td>
       <td>
-        <img src="docs/output_image.png" alt="Output Image" width="400"/>
+        <img src="fpga-convolution-accelerator/simulation/lena_image/blurred_lena.bmp" alt="Output Image" width="400"/>
       </td>
     </tr>
   </table>
 </p>
 
-> Replace the placeholder images with your actual input and processed output results.
+
 
 # Features
 
