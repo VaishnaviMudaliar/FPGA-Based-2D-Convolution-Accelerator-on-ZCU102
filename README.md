@@ -187,7 +187,7 @@ The following images demonstrate the effect of the 2D convolution accelerator im
     </tr>
     <tr>
       <td>
-        <img src="docs/input_image.png" alt="Input Image" width="400"/>
+        <img src="fpga-convolution-accelerator/simulation/lena_image/lena_gray.bmp" alt="Input Image" width="400"/>
       </td>
       <td>
         <img src="docs/output_image.png" alt="Output Image" width="400"/>
