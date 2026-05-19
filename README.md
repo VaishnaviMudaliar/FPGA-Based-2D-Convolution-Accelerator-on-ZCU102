@@ -259,8 +259,18 @@ The following images demonstrate the effect of the 2D convolution accelerator im
   </table>
 </p>
 
+---
+# FPGA Resource Utilization
 
+| Resource | Utilization |
+|---|---|
+| LUTs | 9233 |
+| Flip-Flops | 11522 |
+| BRAM | 8 |
+| DSP Slices | 0 |
+| Clock Frequency | 100 MHz |
 
+---
 # Features
 
 - AXI-stream compatible architecture
