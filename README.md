@@ -1,5 +1,20 @@
 # FPGA-Based 2D Convolution Accelerator on ZCU102 
 
+Real-time AXI-Stream based image processing accelerator implemented on FPGA.
+
+<p align="center">
+
+  <img src="https://img.shields.io/badge/Maintained-yes-green"/>
+  <img src="https://img.shields.io/badge/Platform-ZCU102-blue"/>
+  <img src="https://img.shields.io/badge/Language-Verilog-orange"/>
+  <img src="https://img.shields.io/badge/Tool-Vivado-red"/>
+  <img src="https://img.shields.io/badge/Interface-AXI--Stream-purple"/>
+  <img src="https://img.shields.io/badge/License-MIT-yellow"/>
+
+</p>
+
+---
+
 <p align="center">
   <img src="architecture_diagram.png" alt="Image Processing Architecture Diagram" width="900"/>
 </p>
@@ -309,6 +324,3 @@ If you found this project interesting, feel free to ⭐ the repository or contri
 
 ---
 
-# License
-
-This project is open-source and available under the MIT License.
